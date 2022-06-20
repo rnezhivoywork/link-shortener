@@ -1,28 +1,38 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var search = document.querySelector('#search');
-    var results = document.querySelector('#searchresults');
-    var templateContent = document.querySelector('#resultstemplate').content;
-    search.addEventListener('keyup', function handler(event) {
-        while (results.children.length) results.removeChild(results.firstChild);
-        var inputVal = new RegExp(search.value.trim(), 'i');
-        var clonedOptions = templateContent.cloneNode(true);
-        var set = Array.prototype.reduce.call(clonedOptions.children, function searchFilter(frag, el) {
-            if (inputVal.test(el.textContent) && frag.children.length < 5) frag.appendChild(el);
-            return frag;
-        }, document.createDocumentFragment());
-        results.appendChild(set);
-    });
-}, false);
-var text = $(".logout").text();
-console.log(text);
-var statuss = false;
-function logouthover(event) {
-    if (statuss == false) {
-        statuss = !statuss;
-        $(".logout").text("Выйти");
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null)
+};
+var elem = $("button#shorten")[0];
+var listener = function (e) {
+    // отменяем стандартное действие браузера
+    e.preventDefault();
+    if (isValidURL($("input[name=url]").val())) {
+        $.ajax({
+            url: '/shorten',         /* Куда пойдет запрос */
+            method: 'get',             /* Метод передачи (post или get) */
+            dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
+            data: { url: $("input[name=url]").val() },     /* Параметры передаваемые в запросе. */
+            success: function (data) {   /* функция которая будет выполнена после успешного запроса.  */
+                $("input[name=url]").val(data);
+                $("input[name=url]").select();
+                document.execCommand("copy");
+                $("button#shorten").attr("id", "copy");
+                $("button#copy").css("background-color", "limegreen");
+                $("button#copy").text("Скопировано!");
+                elem.removeEventListener('click', listener, false);
+                elem.addEventListener('click', copied, false);
+            }
+        });
     }
     else {
-        statuss = !statuss;
-        $(".logout").text(text);
+        alert("Я принимаю только ссылки!");
     }
+};
+var copied = function (e) {
+    // отменяем стандартное действие браузера
+    e.preventDefault();
 }
+elem.addEventListener('click', listener, false);
