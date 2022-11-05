@@ -7,7 +7,7 @@ class Controller_Shorten extends Controller
 		$this->view = new View();
 	}
 	function action_index(){
-        $mask = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
+        $mask = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890";
 		$url = $_GET['url'];
         if($url != ""){
             $randomstr = $mask[rand(0, 61)] . $mask[rand(0, 61)] . $mask[rand(0, 61)] . $mask[rand(0, 61)] . $mask[rand(0, 61)] . $mask[rand(0, 61)];

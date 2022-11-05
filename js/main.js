@@ -21,6 +21,7 @@ var listener = function (e) {
                 document.execCommand("copy");
                 $("button#shorten").attr("id", "copy");
                 $("button#copy").css("background-color", "limegreen");
+                $("button#copy").css("border-color", "limegreen");
                 $("button#copy").text("Скопировано!");
                 elem.removeEventListener('click', listener, false);
                 elem.addEventListener('click', copied, false);
